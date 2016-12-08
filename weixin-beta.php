@@ -11,8 +11,8 @@
 
 define("TOKEN", "weixin");
 $wechatObj = new wechatCallbackapiTest();
-$wechatObj->valid();
-//$wechatObj->responseMsg();
+//$wechatObj->valid();
+$wechatObj->responseMsg();
 
 
 
@@ -73,7 +73,7 @@ class wechatCallbackapiTest
         if(!empty( $keyword ))
         {
             $msgType = "text";
-            $contentStr = "Welcome to wechat world!";
+            $contentStr = "http://www.pxz1004.cn/weixin/apiJSSDKTest.php";
             $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $msgType, $contentStr);
             echo $resultStr;
         }else{

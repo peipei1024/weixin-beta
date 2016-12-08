@@ -120,7 +120,7 @@ class wechatCallbackapiTest
     /**
      * @return bool
      * 获得参数 signature nonce token timestamp echostr
-     * 微信服务器验证，确保消息来自微信服务w器
+     * 微信服务器验证，确保消息来自微信服务器
      * 验证规则： 微信服务器传入四个参数signature， timestamp， nonce， echostr，
      * token 为微信后台与第三方服务器约定的字符串
      * 1）将token、timestamp、nonce三个参数进行字典序排序
