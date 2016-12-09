@@ -10,7 +10,6 @@ class JSSDK {
 
     public function getSignPackage() {
         $jsapiTicket = $this->getJsApiTicket();
-
         // 注意 URL 一定要动态获取，不能 hardcode.
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
         $url = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -31,7 +30,12 @@ class JSSDK {
             "signature" => $signature,
             "rawString" => $string
         );
-        echo $signature;
+//        echo 'appId: '.$this->appId.'<br>';
+//        echo '$nonceStr: '.$nonceStr.'<br>';
+//        echo '$timestamp: '.$timestamp.'<br>';
+//        echo 'url: '.$url.'<br>';
+//        echo '$signature: '.$signature.'<br>';
+//        echo 'rawString: '.$string.'<br>';
         return $signPackage;
     }
 
@@ -41,6 +45,7 @@ class JSSDK {
         for ($i = 0; $i < $length; $i++) {
             $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
         }
+//        echo '$nonceStr: '.$str.'<br>';
         return $str;
     }
 
@@ -64,7 +69,7 @@ class JSSDK {
         } else {
             $ticket = $data->jsapi_ticket;
         }
-
+//        echo '$ticket: '.$ticket.'<br>';
         return $ticket;
     }
 
@@ -87,6 +92,7 @@ class JSSDK {
         } else {
             $access_token = $data->access_token;
         }
+//        echo '$access_token: '.$access_token.'<br>';
         return $access_token;
     }
 

@@ -1,0 +1,14 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+ul{
+    padding-left: 0px;
+}
+li{
+    text-align: center;
+    height: 40px;
+    list-style: none;
+    background-color: white;
+    border-bottom: 1px solid rgba(8, 26, 28, 0.87);
+}
