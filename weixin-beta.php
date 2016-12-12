@@ -8,8 +8,9 @@
  */
 
 
-
+require_once 'JSSDK.php';
 define("TOKEN", "weixin");
+define('appId', 'wx3f69126e35cab2ed');
 $wechatObj = new wechatCallbackapiTest();
 //$wechatObj->valid();
 $wechatObj->responseMsg();
@@ -41,7 +42,18 @@ class wechatCallbackapiTest
             switch($RX_TYPE)
             {
                 case "text":
-                    $resultStr = $this->handleText($postObj);
+                    $resultStr = '';
+                    if ($postObj->Content == '1'){
+                        $contentStr = "http://www.pxz1004.cn/weixin/apiJSSDKTest.php";
+                        $resultStr = $this->handleText($postObj, $contentStr);
+                    }else if ($postObj->Content == '2'){
+                        $redirect_uri = urlencode('http://www.pxz1004.cn/weixin/callback_info.html');
+                        $contentStr = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".appId.'&redirect_uri='.$redirect_uri.'&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect';
+                        $resultStr = $this->handleText($postObj, $contentStr);
+                    }else if ($postObj->Content == '3'){
+                        $contentStr = "感谢您关注"."\n"."微信号：匠师"."\n"."帝都北京，我就玩玩，相关信息查询。"."\n"."目前平台功能如下："."\n"."【1】 jssdk"."\n"."【2】 授权页面"."\n"."【3】 help"."\n"."更多内容，敬请期待...";
+                        $resultStr = $this->handleText($postObj, $contentStr);
+                    }
                     break;
                 case "event":
                     $resultStr = $this->handleEvent($postObj);
@@ -57,7 +69,7 @@ class wechatCallbackapiTest
         }
     }
 
-    public function handleText($postObj)
+    public function handleText($postObj, $backMessage)
     {
         $fromUsername = $postObj->FromUserName;
         $toUsername = $postObj->ToUserName;
@@ -73,8 +85,7 @@ class wechatCallbackapiTest
         if(!empty( $keyword ))
         {
             $msgType = "text";
-            $contentStr = "http://www.pxz1004.cn/weixin/apiJSSDKTest.php";
-            $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $msgType, $contentStr);
+            $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $msgType, $backMessage);
             echo $resultStr;
         }else{
             echo "Input something...";
@@ -87,7 +98,7 @@ class wechatCallbackapiTest
         switch ($object->Event)
         {
             case "subscribe":
-                $contentStr = "感谢您关注"."\n"."微信号：匠师"."\n"."帝都北京，我就玩玩，相关信息查询。"."\n"."目前平台功能如下："."\n"."【1】 查天气，如输入：北京天气"."\n"."【2】 查公交，如输入：北京公交625"."\n"."【3】 北京信息查询，如输入：北京八宝坟"."\n"."更多内容，敬请期待...";
+                $contentStr = "感谢您关注"."\n"."微信号：匠师"."\n"."帝都北京，我就玩玩，相关信息查询。"."\n"."目前平台功能如下："."\n"."【1】 welcome weichat"."\n"."【2】 授权页面"."\n"."【3】 help"."\n"."更多内容，敬请期待...";
                 break;
             case "unsubscribe":
                 break;
