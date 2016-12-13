@@ -25,7 +25,8 @@ $signPackage = $jssdk->getSignPackage();
         <li id="getLocation">获取经纬度</li>
         <li id="openLocation">打开地图</li>
         <li id="closeWindow">关闭窗口</li>
-<!--        <li id="hideMenuItems">hideMenuItems</li>-->
+        <li id="hideMenuItems">批量隐藏保护和功能类按钮</li>
+        <li id="showMenuItems">批量显示保护和功能类按钮</li>
 <!--        <li id="onMenuShareTimeline">onMenuShareTimeline</li>-->
         <li id="chooseImage">选择图片</li>
         <li id="previewImage">预览图片</li>
@@ -34,6 +35,9 @@ $signPackage = $jssdk->getSignPackage();
         <li id="scanQRCode">扫描二维码</li>
         <li id="hideOptionMenu">hideOptionMenu</li>
         <li id="showOptionMenu">showOptionMenu</li>
+        <li id="hideAllNonBaseMenuItem">隐藏所有非基础按钮接口</li>
+        <li id="showAllNonBaseMenuItem">显示所有功能按钮接口</li>
+        <li id="startSearchBeacons">startSearchBeacons</li>
 <!--        <li id="onMenuShareAppMessage">onMenuShareAppMessage</li>-->
     </ul>
 </body>
@@ -54,6 +58,9 @@ $signPackage = $jssdk->getSignPackage();
             'openLocation',
             'closeWindow',
             'hideMenuItems',
+            'showMenuItems',
+            'hideAllNonBaseMenuItem',
+            'showAllNonBaseMenuItem',
             'onMenuShareTimeline',
             'onMenuShareAppMessage',
             'chooseImage',
@@ -62,7 +69,8 @@ $signPackage = $jssdk->getSignPackage();
             'downloadImage',
             'scanQRCode',
             'hideOptionMenu',
-            'showOptionMenu'
+            'showOptionMenu',
+            'openProductSpecificView'
         ]
     });
 
@@ -128,11 +136,19 @@ $signPackage = $jssdk->getSignPackage();
         $('#closeWindow').click(function () {
            wx.closeWindow();
         });
-//        $('#hideMenuItems').click(function () {
-//            wx.hideMenuItems({
-//                menuList: [menuItem:share:appMessage, menuItem:openWithSafari] // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
-//            });
-//        });
+        $('#hideMenuItems').click(function () {
+            wx.hideMenuItems({
+                menuList: ['menuItem:readMode',
+                'menuItem:share:timeline'] // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
+            });
+        });
+
+        $('#showMenuItems').click(function () {
+            wx.showMenuItems({
+                menuList: ['menuItem:readMode',
+                'menuItem:share:timeline']
+            });
+        });
 
         $('#onMenuShareTimeline').click(function () {
             wx.onMenuShareTimeline({
@@ -246,8 +262,21 @@ $signPackage = $jssdk->getSignPackage();
         $('#showOptionMenu').click(function () {
             wx.showOptionMenu();
         });
-
-
+        $('#hideAllNonBaseMenuItem').click(function () {
+            wx.hideAllNonBaseMenuItem();
+        });
+        $('#showAllNonBaseMenuItem').click(function () {
+            wx.showAllNonBaseMenuItem();
+        });
+        $('#startSearchBeacons').click(function () {
+            wx.startSearchBeacons({
+                ticket:"美食",  //摇周边的业务ticket, 系统自动添加在摇出来的页面链接后面
+                complete:function(argv){
+                    //开启查找完成后的回调函数
+                    alert(argv.length);
+                }
+            });
+        });
 
     });
     wx.error(function (res) {

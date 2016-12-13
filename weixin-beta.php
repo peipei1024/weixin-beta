@@ -12,7 +12,7 @@ require_once 'JSSDK.php';
 define("TOKEN", "weixin");
 define('appId', 'wx3f69126e35cab2ed');
 $wechatObj = new wechatCallbackapiTest();
-//$wechatObj->valid();
+$wechatObj->valid();
 $wechatObj->responseMsg();
 
 
