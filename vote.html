@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <title>Title</title>
+</head>
+<body>
+    <button id="vote">投票</button>
+    <button id="novote">没有关注投票</button>
+    <br><br>
+    <button id="yesvote">关注投票</button>
+
+    <script src="jquery-3.1.1.js"></script>
+    <script src="authorization.js"></script>
+    <script>
+        var data = {'openid' : null, 'name' : null};
+        $('#vote').click(function () {
+            window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3f69126e35cab2ed&redirect_uri=https%3A%2F%2Fwww.pxz1004.cn%2Fcallback_info.html&response_type=code&scope=snsapi_userinfo&state=aa#wechat_redirect';
+//            var dd = JSON.parse(data);
+//            if (dd.openid == null){
+//
+//            }
+        });
+    </script>
+</body>
+</html>

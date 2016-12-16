@@ -7,14 +7,10 @@
  * Describe:
  */
 
-
-
-define("TOKEN", "weixin");
+define("TOKEN", "weixin");//令牌，和微信后台约定好的
 $wechatObj = new wechatCallbackapi();
 //$wechatObj->valid();
 $wechatObj->responseMsg();
-
-
 
 
 class wechatCallbackapi
@@ -43,6 +39,8 @@ class wechatCallbackapi
 //                        $url = "http://www.pxz1004.cn/weixin/apiJSSDKTest.php";
                         $url = $postObj->FromUserName;
                         $resultStr = $this->handleText($postObj, $url);
+                    }else if($postObj->Content == '3'){
+                        $resultStr = $this->handleImageText($postObj);
                     }
                     break;
                 case "event":
@@ -59,7 +57,10 @@ class wechatCallbackapi
         }
     }
 
-
+    /**发送文字回复
+     * @param $postObj
+     * @param $msg 回复消息的内容
+     */
     public function handleText($postObj, $msg)
     {
         $fromUsername = $postObj->FromUserName;
@@ -84,7 +85,37 @@ class wechatCallbackapi
         }
     }
 
+    public function handleImageText($postObj){
+        $fromUsername = $postObj->FromUserName;
+        $toUsername = $postObj->ToUserName;
+        $createTime = time();
+        for ($a = 0; a < count($articles))
+        $article = array("title"=>"title", "description"=>"des", "picurl"=>"picurl", "url"=>"url");
+        $article1 = null;
+        $articles = [$article, $article1];
+        $imageTextTpl = "<xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[%s]]></MsgType>
+                        <ArticleCount>1</ArticleCount>
+                        <Articles>
+                            <item>
+                                <Title><![CDATA[我就测试下]]></Title> 
+                                <Description><![CDATA[描述]]></Description>
+                                <PicUrl><![CDATA[http://ac-wybixxjv.clouddn.com/3r4dONqOsWkDphERhUMLbr3XDqbdVFsamg4YQd7n]]></PicUrl>
+                                <Url><![CDATA[http://ac-wybixxjv.clouddn.com/3r4dONqOsWkDphERhUMLbr3XDqbdVFsamg4YQd7n]]></Url>
+                            </item>
+                        </Articles>
+                        </xml>";
+        $msgType = 'news';
+        $resultStr = sprintf($imageTextTpl, $fromUsername, $toUsername, $createTime, $msgType);
+        echo $resultStr;
+    }
 
+    /**欢迎信息方法
+     * @return string
+     */
     public function welcomeText(){
         $welcome = "感谢您关注"."\n"."微信号：匠师".
             "\n"."帝都北京，相关信息查询。"."\n"."目前平台功能如下："
@@ -92,7 +123,9 @@ class wechatCallbackapi
         return $welcome;
     }
 
-
+    /**
+     * 进行第三方服务器配置的验证方法
+     */
     public function valid()
     {
         $echoStr = $_GET["echostr"];
