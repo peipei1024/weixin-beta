@@ -9,7 +9,7 @@
 
 define("TOKEN", "weixin");//令牌，和微信后台约定好的
 $wechatObj = new wechatCallbackapi();
-//$wechatObj->valid();
+$wechatObj->valid();
 $wechatObj->responseMsg();
 
 
@@ -89,7 +89,7 @@ class wechatCallbackapi
         $fromUsername = $postObj->FromUserName;
         $toUsername = $postObj->ToUserName;
         $createTime = time();
-        for ($a = 0; a < count($articles))
+//        for ($a = 0; a < count($articles))
         $article = array("title"=>"title", "description"=>"des", "picurl"=>"picurl", "url"=>"url");
         $article1 = null;
         $articles = [$article, $article1];
