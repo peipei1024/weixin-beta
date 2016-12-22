@@ -9,56 +9,58 @@
 
 //（需传入msg_signature、timetamp、nonce和postdata，前3个参数可从接收已授权公众号消息和事件的URL中获得，postdata即为POST过来的数据包内容）
 
-include_once 'wxBizMsgCrypt.php';
-$mysql_server_name='localhost'; //改成自己的mysql数据库服务器
+//include_once 'wxBizMsgCrypt.php';
+$mysql_server_name='localhost';
 
-$mysql_username='root'; //改成自己的mysql数据库用户名
+$mysql_username='root';
 
-$mysql_password='1130397686p'; //改成自己的mysql数据库密码
+$mysql_password='1130397686p';
 
-$mysql_database='weixinopen'; //改成自己的mysql数据库名
+$mysql_database='weixinopen';
 
 $conn=mysql_connect($mysql_server_name,$mysql_username,$mysql_password) or die("error connecting") ;
-//连接数据库
 
+mysql_query("set names 'utf8'");
 
-mysql_query("set names 'utf8'"); //数据库输出编码
-
-mysql_select_db($mysql_database); //打开数据库
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$signature = $_GET['signature'];
+mysql_select_db($mysql_database);
+$aaarrrr = $_SERVER['QUERY_STRING'];
+$signature_data = $_GET['signature'];
+$signature_request = $_REQUEST['signature'];
 $timestamp = $_GET['timestamp'];
 $nonce = $_GET['nonce'];
 $msg_signature = $_GET['msg_signature'];
+$msg_signature_request = $_REQUEST['msg_signature'];
+$raw_msg =  file_get_contents('php://input');
 
-$sql_mess = "insert into data (name,content) values ('mess', 'mess')";
-$sql_signature = "insert into data (name,content) values ('signature', $signature)";
-$sql_timestamp = "insert into data (name,content) values ('timestamp', $timestamp)";
-$sql_nonce = "insert into data (name,content) values ('nonce', $nonce)";
-$sql_msg_signature = "insert into data (name,content) values ('msg_signature', $msg_signature)";
+$getlength = strval(count($_GET));
+$ischeck = 'aa';
+if (empty($signature_data)){
+    $ischeck = 'kongde';
+}else{
+    $ischeck = 'notkong';
+}
+//echo $ischeck;
+$sql_raw_msg = "insert into data (name,content) values ('raw_msg', $aaarrrr)";
+$sql_mess = "insert into data (name,content) values ('mess1', 'mess')";
+$sql_signature = "insert into data (name,content) values ('signature1', $signature_data)";
+$sql_timestamp = "insert into data (name,content) values ('timestamp1', $timestamp)";
+$sql_nonce = "insert into data (name,content) values ('nonce1', $nonce)";
+$sql_msg_signature = "insert into data (name,content) values ('msg_signature1', $msg_signature_request)";
+$sql_get_length = "insert into data (name,content) values ('getlength', $getlength)";
+$sql_ischeck = "insert into data (name,content) values ('ischeck', $ischeck)";
 
+
+mysql_query($sql_ischeck);
+mysql_query($sql_raw_msg);
 mysql_query($sql_mess);
 mysql_query($sql_signature);
 mysql_query($sql_timestamp);
 mysql_query($sql_nonce);
 mysql_query($sql_msg_signature);
-
+mysql_query($sql_get_length);
+mysql_close();
+echo 'success';
+//4dda1514bded0b40312e2d41fab4cec1
 //$token = 'weixin';
 //$encodingAesKey = 'tCEyXIG0Z1P1HL7DlmSfZ6rKjv8K8GVBbTZdhJe7RIc';
 //$appId = 'wx92fc526e3db0b962';
@@ -91,15 +93,20 @@ mysql_query($sql_msg_signature);
 //    echo "success";
 //
 //}
-mysql_close();
 
 
 
 
-
-
-
-
+//http://www.pxz1004.cn/open/bind.php
+//gh_70c737d7be73
+//www.pxz1004.cn
+//
+//weixin
+//tCEyXIG0Z1P1HL7DlmSfZ6rKjv8K8GVBbTZdhJe7RIc
+//http://www.pxz1004.cn/open/$APPID$/mess.php
+//www.pxz1004.cn
+//123.206.75.86
+//10.07
 
 
 
