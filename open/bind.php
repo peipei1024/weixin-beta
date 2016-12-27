@@ -7,77 +7,105 @@
  * Describe:
  */
 
-//（需传入msg_signature、timetamp、nonce和postdata，前3个参数可从接收已授权公众号消息和事件的URL中获得，postdata即为POST过来的数据包内容）
 
 include_once 'wxBizMsgCrypt.php';
+include_once 'DBHelp.php';
 
 $signature    =  $_GET['signature'];
 $timeStamp    =  $_GET['timestamp'];
 $nonce        =  $_GET['nonce'];
 $encrypt_type =  $_GET['encrypt_type'];
 $msg_sign     =  $_GET['msg_signature'];
-$raw_msg      =  file_get_contents('php://input');
+//$raw_msg      =  file_get_contents('php://input');
 
+$raw_msg      =  "<?xml version=\"1.0\"?><xml>
+    <AppId><![CDATA[wx675ba5140e09984d]]></AppId>
+    <Encrypt><![CDATA[rk/pDOtTOhzccUqvPeIhk2Y/eZZR25uUiXBOUUmAwgr8kEMoIaG/z0Q8s4FEJa5JdFREUYxWLzAZ1O0dWBLS1al4eNTtXBiLyjou5pxEh65R/x4SjyIA9FxV6f1TcGEzm82u5M8TCpPwxgST64FE0vhv4pOBwpUf5VB6Br4p7TDKV/RuSOCySgaArsnPpGEj8670l6C3d5dn5A/7IQDmOsuLyWvsug6//+C89Ole0r+y+t55wvhMjvTyozPkfSIWwj3kSrPPkyndfq+HB3ZSI9Wt3DqjYsfZUN0EBTZ5DjJnV6eanrdQla1EUyZaMX7gYXZqRkIgJiLUA5ZuGcyA3vlVMU9fbaXahVyewFwYkMHuMToJX/KnWPf4Wkoa8FCFJjE4QzDx4SjDdas0JW9kIpQK1ReJcEQD0OXL4RkR3g32dABM5asvh9EhNgdcqM796ut+EDrcLFvzzbCjmjOXUw==]]></Encrypt>
+</xml>";
 $token = 'weixin';
 $encodingAesKey = 'tCEyXIG0Z1P1HL7DlmSfZ6rKjv8K8GVBbTZdhJe7RIc';
-$appId = 'wx92fc526e3db0b962';
+$appId = 'wx675ba5140e09984d';
 
 
+
+
+//$sql_mess = "insert into data (name,content) values ('signature', '$signature')";
+//$sql_mess1 = "insert into data (name,content) values ('timeStamp', '$timeStamp')";
+//$sql_mess2 = "insert into data (name,content) values ('nonce', '$nonce')";
+//$sql_mess3 = "insert into data (name,content) values ('encrypt_type', '$encrypt_type')";
+//$sql_mess4 = "insert into data (name,content) values ('msg_sign', '$msg_sign')";
+//$xml = simplexml_load_string($raw_msg);
+//$xmlstr = $xml->asXML();
+//$sql_mess5 = "insert into data (name,content) values ('xmlstr', '$xmlstr')";
+//
+//
+//$db = new DBHelp('root', '123456', 'weixin');
+//$db->insert($sql_mess);
+//$db->insert($sql_mess1);
+//$db->insert($sql_mess2);
+//$db->insert($sql_mess3);
+//$db->insert($sql_mess4);
+//$db->insert($sql_mess5);
+
+echo $msg_sign.'<br>';
+echo $timeStamp.' '.$nonce.'  '.$signature.'  ';
 $wechat = new WXBizMsgCrypt($token, $encodingAesKey, $appId);
 
+echo strlen($raw_msg).'  ';
+if ($raw_msg != null){
+    $encryptMsg=$raw_msg;
+    $xml_tree = new DOMDocument();
+    $xml_tree->loadXML($encryptMsg);
+    $array_e = $xml_tree->getElementsByTagName('Encrypt');
+    $encrypt = $array_e->item(0)->nodeValue;
+    $format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
+    $from_xml = sprintf($format, $encrypt);
+    echo strlen($from_xml).'  ';
+    $msg = '';
+    $errCode = $wechat->decryptMsg($msg_sign, $timeStamp, $nonce, $from_xml, $msg);
+    echo $errCode;
+    if ($errCode == 0) {
+
+        $xml = new DOMDocument();
+        $xml->loadXML($msg);
+        $array_e = $xml->getElementsByTagName('ComponentVerifyTicket');
+        $component_verify_ticket = $array_e->item(0)->nodeValue;
 
 
-$sql_mess = "insert into data (name,content) values ('component_verify_ticket', 'aa')";
-//mysql_query($sql_mess);
+echo $component_verify_ticket;
+//        $sql_mess = "insert into data (name,content) values ('component_verify_ticket', '$component_verify_ticket')";
+//        $db->insert($sql_mess);
 
-$aaaaaa = $signature.'aaa';
-$sql_msg_signature = "insert into data (name,content) values ('msg_signature1', $aaaaaa)";
-
-
-$retval = mysql_query( $sql_msg_signature, $conn );
-if(! $retval )
-{
-//    die('Could not enter data: ' . mysql_error());
+//        echo $component_verify_ticket;
+    }else {
+        echo 'raw msg fail' . $errCode;
+//        $sql_mess = "insert into data (name,content) values ('component_verify_ticket', 'decrypt fail')";
+//        $db->insert($sql_mess);
+    }
+}else{
+//    $sql_mess = "insert into data (name,content) values ('message', 'post null')";
+//    $db->insert($sql_mess);
+    echo 'raw msg null';
 }
-mysql_close();
-$fp = fopen("signature.txt", "w");
-fwrite($fp, $signature);
-fclose($fp);
-$aaa = file_get_contents("signature.txt");
-echo $signature;
-echo 'success';
-echo $aaa;
-echo $raw_msg;
 
-//if($raw_msg!=null){
-//    $encryptMsg=$raw_msg;
-//    $xml_tree = new DOMDocument();
-//    $xml_tree->loadXML($encryptMsg);
-//    $array_e = $xml_tree->getElementsByTagName('Encrypt');
-//    $encrypt = $array_e->item(0)->nodeValue;
-//    $format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
-//    $from_xml = sprintf($format, $encrypt);
-//    $msg = '';
-//    $errCode = $wechat->decryptMsg($msg_sign, $timeStamp, $nonce, $from_xml, $msg);
-//
-//    if ($errCode == 0) {
-//
-//        $xml = new DOMDocument();
-//        $xml->loadXML($msg);
-//        $array_e = $xml->getElementsByTagName('ComponentVerifyTicket');
-//        $component_verify_ticket = $array_e->item(0)->nodeValue;
-//
-//        $sql_mess = "insert into data (name,content) values ('component_verify_ticket', $component_verify_ticket)";
-//        mysql_query($sql_mess);
-//
-//    } else {
-//        $sql_mess = "insert into data (name,content) values ('component_verify_ticket', 'error')";
-//        mysql_query($sql_mess);
-//    }
-//}else{
-//    $sql_mess = "insert into data (name,content) values ('component_verify_ticket', 'nu')";
-//    mysql_query($sql_mess);
-//}
+
+echo 'success';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

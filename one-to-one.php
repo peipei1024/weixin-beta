@@ -9,14 +9,14 @@
 
 //$aa = 'http://www.pxz1004.cn/callback_info.html';
 //echo urlencode($aa);
-$arr = 'aa';
-$_SERVER['QUERY_STRING'];
-echo $_SERVER['QUERY_STRING'];
-if (is_string($_SERVER['QUERY_STRING'])){
-    echo 'true';
-}else{
-    echo 'false';
-}
+//$arr = 'aa';
+//$_SERVER['QUERY_STRING'];
+//echo $_SERVER['QUERY_STRING'];
+//if (is_string($_SERVER['QUERY_STRING'])){
+//    echo 'true';
+//}else{
+//    echo 'false';
+//}
 
 //if (is_string(strval(count($arr)))){
 //    echo 'true';
