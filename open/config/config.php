@@ -11,4 +11,6 @@ define('ENCODINGAESKEY', 'tCEyXIG0Z1P1HL7DlmSfZ6rKjv8K8GVBbTZdhJe7RIc');
 define('APPID', 'wx675ba5140e09984d');//component_appid
 define('TOKEN', 'weixin');
 define('APPSECRET', '4dda1514bded0b40312e2d41fab4cec1');//component_appsecret
+//define('CARAPPID', 'wx13c168c4eb0e5e62');
+define('WEIXIN_PUBLIC_qichang_test', 'wx13c168c4eb0e5e62');
 ?>
